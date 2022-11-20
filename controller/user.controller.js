@@ -16,7 +16,6 @@ module.exports = {
 
     getUserById: (req, res, next) => {
         try {
-            throw new Error('DSADSA');
 
             res.json(req.user);
         } catch (e) {

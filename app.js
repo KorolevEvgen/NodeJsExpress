@@ -2,13 +2,17 @@
 // що надає широкий набір функцій для мобільних та веб-додатків.
 
 const express = require('express');
+require('dotenv').config(); // створюємо файл(.env) і встановлюємо бібліотеку (dotenv)
 
-const userDb = require('./dataBase/users');
+const userRouter = require('./router/user.router');
+const configs = require('./config/config');
 
 const app = express();
 
 app.use(express.json()); // допомагає зчитувати json
 app.use(express.urlencoded({ extended: true }));
+
+app.use('/users', userRouter); // початковий шлях ('/users')
 
 // -- get - метод, який використовується для отримання!!!
 // -- post - метод, який використовується для створення!!!
@@ -27,45 +31,16 @@ app.get('/', (req, res) => {
     res.json('WElCOME');
 });
 
-app.get('/users', (req, res) => {
-    console.log('USERS ENDPOINT');
-    // res.json({user: 'Evgen'});
-    // res.end('Life is good');
-    // res.sendFile('./')
-    // res.status(401).json('Life is good');
-    res.json(userDb);
+app.use((err, req, res, next) => {
+    res.status(err.status || 500).json({
+        message: err.message || 'Unknown error',
+        status: err.status || 500,
+    });
 });
 
-app.get('/users/:userId', (req, res) => {
-    console.log(req.params);
-
-    const { userId } = req.params;
-
-    res.json(userDb[userId]);
-});
-
-app.post('/users', (req, res) => {
-    const userInfo = req.body;
-
-    console.log(userInfo);
-
-    userDb.push(userInfo);
-
-    res.status(201).json('Created');
-});
-
-app.put('/users/:userId', (req, res) => {
-    const newUserInfo = req.body;
-    const userId = req.params.userId;
-
-    userDb[userId] = newUserInfo;
-
-    res.json('Updated');
-});
-
-// підняття серверу на певному порті ('5000'), ще кажуть слухає порт!!!
-app.listen(5000, () => {
-    console.log('Server listen 5000');
+// підняття серверу на певному порті (process.env.PORT), ще кажуть слухає порт!!!
+app.listen(configs.PORT, () => {
+    console.log(`Server listen ${configs.PORT}`);
 });
 
 

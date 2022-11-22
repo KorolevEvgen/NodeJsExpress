@@ -1,7 +1,5 @@
-// Express - це мінімалістичний та гнучкий веб-фреймворк для програм Node.js,
-// що надає широкий набір функцій для мобільних та веб-додатків.
-
 const express = require('express');
+const mongoose = require('mongoose');
 require('dotenv').config(); // створюємо файл(.env) і встановлюємо бібліотеку (dotenv)
 
 const userRouter = require('./router/user.router');
@@ -39,8 +37,9 @@ app.use((err, req, res, next) => {
 });
 
 // підняття серверу на певному порті (process.env.PORT), ще кажуть слухає порт!!!
-app.listen(configs.PORT, () => {
-    console.log(`Server listen ${configs.PORT}`);
+app.listen(configs.PORT,  async () => {
+    await mongoose.connect(configs.MONGO_URL)
+    console.log(`Server listen ${configs.PORT}`)
 });
 
 

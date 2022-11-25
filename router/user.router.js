@@ -2,14 +2,26 @@
 
 const router = require('express').Router();
 
-const controller = require('../controller/user.controller');
-const mdlwr = require('../middleware/user.middleware');
+const controller = require("../controller/user.controller");
+const mdlwr = require("../middleware/user.middleware");
 
-router.get('/', controller.getAllUsers); // дістати усіх
-router.post('/', mdlwr.checkIsEmailUnique,controller.createUser); // створити нового
+router.get('/', controller.getAllUsers);
+router.post('/', mdlwr.isNewUserValid, mdlwr.checkIsEmailUnique, controller.createUser);
 
-router.get('/:userId', mdlwr.checkIsUserExist, controller.getUserById); // дістати одного
-router.put('/:userId', mdlwr.checkIsUserExist, controller.updateUser); // оновити одного
-router.delete('/:userId', controller.deleteUserById); // видалити одного
+router.get(
+    '/:userId',
+    mdlwr.isUserIdValid,
+    mdlwr.getUserDynamically('userId', 'params', '_id'),
+    controller.getUserById
+);
+router.put(
+    '/:userId',
+    mdlwr.isUserIdValid,
+    mdlwr.isEditUserValid,
+    mdlwr.getUserDynamically('userId', 'params', '_id'),
+    controller.updateUser
+);
+router.delete('/:userId', mdlwr.isUserIdValid, controller.deleteUserById);
 
 module.exports = router;
+

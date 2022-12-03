@@ -1,5 +1,3 @@
-// joi - це бібліотека, яка займається валідацією даних!!!
-
 const Joi = require('joi');
 const regexp = require('../config/regexp.enum');
 

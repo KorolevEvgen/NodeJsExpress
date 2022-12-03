@@ -6,7 +6,7 @@
 const User = require("../dataBase/User");
 const ApiError = require("../error/ApiError");
 const userValidator = require("../validator/user.validator");
-const commonValidator = require("../validator/common.validators");
+const commonValidator = require("../validator/common.validator");
 
 module.exports = {
     getUserDynamically: (fieldName, from = 'body', dbField = fieldName) => async (req, res, next) => {

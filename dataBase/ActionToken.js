@@ -8,4 +8,4 @@ const ActionTokenSchema = new Schema({
     timestamps: true,
 });
 
-module.exports = model('Action_Token', ActionTokenSchema); //
+module.exports = model('Action_Token', ActionTokenSchema);

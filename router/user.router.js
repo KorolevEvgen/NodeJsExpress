@@ -1,5 +1,6 @@
 // router - займається перенаправленням інформації далі за вказаним шляхом...
 
+
 const router = require('express').Router();
 
 const controller = require('../controller/user.controller');
@@ -32,4 +33,3 @@ router.delete(
 );
 
 module.exports = router;
-

@@ -1,7 +1,6 @@
 // береться наш пароль(password) додається сіль(salt) після чого він хешується(hash)
 // -- salt(10) - додає якесь значення для нашого пароля (password), 10 - це кількість символів
 
-
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 

@@ -45,13 +45,16 @@ module.exports = {
     },
     forgotPassword: async (req, res, next) => { //
         try {
-            const user = req.user;
+            const { _id, email, name } = req.user;
 
-            const actionToken = oauthService.generateActionToken(FORGOT_PASSWORD, { email: user.email });
+            const actionToken = oauthService.generateActionToken(FORGOT_PASSWORD, { email: email });
             const forgotPassFEUrl = `${FRONTEND_URL}/password/new?token=${actionToken}`;
 
-            await ActionToken.create({ token: actionToken, _user_id: user._id, tokenType: FORGOT_PASSWORD });
-            await emailService.sendEmail('filling55555@gmail.com', FORGOT_PASS, { url: forgotPassFEUrl });
+            await ActionToken.create({ token: actionToken,  tokenType: FORGOT_PASSWORD,_user_id: _id, });
+            await emailService.sendEmail('filling55555@gmail.com', FORGOT_PASS, {
+                url: forgotPassFEUrl,
+                userName: name
+            });
 
             res.json('ok');
         } catch (e) {

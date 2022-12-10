@@ -1,12 +1,15 @@
 const authValidator = require('../validator/auth.validator');
 const ActionToken = require('../dataBase/ActionToken');
 const OAuth = require('../dataBase/OAuth');
-const ApiError = require('../error/ApiError');
 const oauthService = require('../service/oauth.service');
+const OldPassword = require('../dataBase/OldPassword');
+
+const ApiError = require('../error/ApiError');
 const { tokenTypeEnum } = require('../enum');
 const emailService = require('../service/email.service');
 const { FORGOT_PASS } = require('../config/email-action.enum');
 const { FORGOT_PASSWORD } = require('../config/token-action.enum');
+const { compareOldPasswords } = require('../service/oauth.service');
 
 module.exports = {
     isBodyValid: async (req, res, next) => {
@@ -85,6 +88,28 @@ module.exports = {
             }
 
             req.user = tokenInfo._user_id;
+
+
+            next();
+        } catch (e) {
+            next(e);
+        }
+    },
+    checkOldPasswords: async (req, res, next) => {
+        try {
+            const { user, body } = req;
+            const oldPasswords = await OldPassword.find({ _user_id: user._id },{ _id: 0 }).lean();
+
+            if (!oldPasswords.length) {
+                return next();
+            }
+            const results = await Promise.all(oldPasswords.map((record) => compareOldPasswords(record.password, body.password)));
+
+            const condition = results.some((res) => res);
+
+            if (condition) {
+                throw new ApiError('This is old password', 409);
+            }
 
 
             next();

@@ -40,10 +40,7 @@ module.exports = {
     },
     createUser: async (req, res, next) => {
         try {
-            const hashPassword = await oauthService.hashPassword(req.body.password);
-
-            await User.create({ ...req.body, password: hashPassword });
-
+            await User.createWithHashPassword(req.body);
             res.status(201).json('Ok');
         } catch (e) {
             next(e);

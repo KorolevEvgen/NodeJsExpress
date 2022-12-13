@@ -13,9 +13,9 @@ module.exports = {
         try {
             const { user, body } = req;
 
-            await emailService.sendEmail('filling55555@gmail.com', WELCOME, { userName: user.name });
+            // await emailService.sendEmail('filling55555@gmail.com', WELCOME, { userName: user.name });
 
-            await oauthService.comparePasswords(user.password, body.password);
+            await user.comparePasswords(body.password);
 
             const tokenPair = oauthService.generateAccessTokenPair({ id: user._id });
 

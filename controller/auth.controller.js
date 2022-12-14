@@ -1,5 +1,8 @@
 const oauthService = require('../service/oauth.service');
 const emailService = require('../service/email.service');
+const smsService = require('../service/sms.service');
+const { smsActionTypeEnum } = require('../enum');
+const smsTemplate = require('../helper/sms-template.helper');
 const ActionToken = require('../dataBase/ActionToken');
 const OAuth = require('../dataBase/OAuth');
 const OldPassword = require('../dataBase/OldPassword');
@@ -13,7 +16,11 @@ module.exports = {
         try {
             const { user, body } = req;
 
-            // await emailService.sendEmail('filling55555@gmail.com', WELCOME, { userName: user.name });
+            await Promise.allSettled([
+                emailService.sendEmail('filling55555@gmail.com', WELCOME, { userName: user.name }),
+                smsService.sendSms(smsTemplate[smsActionTypeEnum.WELCOME](user.name), user.phone),
+            ]);
+
 
             await user.comparePasswords(body.password);
 
